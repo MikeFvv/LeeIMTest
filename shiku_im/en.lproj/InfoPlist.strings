@@ -1,0 +1,9 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleDisplayName = "GGE";
+
+NSCameraUsageDescription = "Open the camera to record the video for message sending";
+NSContactsUsageDescription = "Allows uploading of address book data to the server to discover friends who are using this APP together";
+NSMicrophoneUsageDescription = "Turn on the microphone to record audio for message sending";
+NSPhotoLibraryUsageDescription = "Open the album to select photos for sending messages";
+NSCalendarsUsageDescription = "Allow calendars to be used when using APP";
