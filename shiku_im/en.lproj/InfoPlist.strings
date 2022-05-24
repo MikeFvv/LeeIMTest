@@ -1,6 +1,7 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleDisplayName = "GGE";
+/// ooo<<< 改名字
+CFBundleDisplayName = "小蜜桃";
 
 NSCameraUsageDescription = "Open the camera to record the video for message sending";
 NSContactsUsageDescription = "Allows uploading of address book data to the server to discover friends who are using this APP together";
