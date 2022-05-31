@@ -168,6 +168,7 @@
     }
 }
 
+//ooo<<<配置接口
 - (void)getDataWithDict:(NSDictionary *)dict {
     g_App.isShowRedPacket = [dict objectForKey:@"displayRedPacket"];
     g_App.isShowGroupRedPacket = [dict objectForKey:@"displayGroupRedPacket"];

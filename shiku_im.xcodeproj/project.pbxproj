@@ -8659,7 +8659,7 @@
 						};
 					};
 					8409055517B693CF00F5C28D = {
-						DevelopmentTeam = 4NNYR87Q88;
+						DevelopmentTeam = 83D3NN4732;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -10320,7 +10320,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
-				DEVELOPMENT_TEAM = 4NNYR87Q88;
+				DEVELOPMENT_TEAM = 83D3NN4732;
 				DOUBANGO_HOME = "";
 				DOUBANGO_LIBS = "";
 				"DOUBANGO_LIBS[arch=arm64]" = $DOUBANGO_HOME/thirdparties/iphone/lib/arm64;
@@ -10413,7 +10413,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
-				DEVELOPMENT_TEAM = 4NNYR87Q88;
+				DEVELOPMENT_TEAM = 83D3NN4732;
 				DOUBANGO_HOME = "";
 				DOUBANGO_LIBS = "";
 				"DOUBANGO_LIBS[arch=arm64]" = $DOUBANGO_HOME/thirdparties/iphone/lib/arm64;
