@@ -1417,8 +1417,13 @@
 //
 //    NSArray *subTitleArray = @[@"通过新的朋友添加搜索好友",@"自己建立群组和已经加入的群组",@"可以邀请手机联系人的好友进行聊天",@"关注知名公众号和搜索热门公众号",@"自己建立群组和已经加入的群组",@"屏蔽拉黑好友的名单管理",@"自己的设备管理",@"可以标记好友的分类标签"];
     
-    NSArray *iconArray = @[@"friend_newFriend",@"friend_colleagues",@"friend_phone_list",@"friend_public",@"friend_group_list",@"friend_black_list",@"friend_device",@"friend_label"];
-    NSArray *titleArray = @[Localized(@"JXNewFriendVC_NewFirend"),@"",Localized(@"JX_MobilePhoneContacts"), @"",Localized(@"JX_ManyPerChat"),@"",@"",Localized(@"JX_Label")];
+//    NSArray *iconArray = @[@"friend_newFriend",@"friend_colleagues",@"friend_phone_list",@"friend_public",@"friend_group_list",@"friend_black_list",@"friend_device",@"friend_label"];
+//    NSArray *titleArray = @[Localized(@"JXNewFriendVC_NewFirend"),@"",Localized(@"JX_MobilePhoneContacts"), @"",Localized(@"JX_ManyPerChat"),@"",@"",Localized(@"JX_Label")];
+    
+    
+    NSArray *iconArray = @[@"friend_group_list",@"",@"friend_newFriend",@"",@"friend_label",@"",@"",@"friend_phone_list"];
+    NSArray *titleArray = @[Localized(@"JX_ManyPerChat"),@"",Localized(@"JXNewFriendVC_NewFirend"), @"",Localized(@"JX_Label"),@"",@"",Localized(@"JX_MobilePhoneContacts")];
+    
     
     NSArray *subTitleArray = @[@"通过新的朋友添加搜索好友",@"自己建立群组和已经加入的群组",@"可以邀请手机联系人的好友进行聊天",@"关注知名公众号和搜索热门公众号",@"自己建立群组和已经加入的群组",@"屏蔽拉黑好友的名单管理",@"自己的设备管理",@"可以标记好友的分类标签"];
     
@@ -1464,19 +1469,9 @@
         switch (btnView.tag) {
             case 0:
             {
-                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(newFriendAction:)];
+                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(myGroupAction:)];
                 [btnView addGestureRecognizer:tap];
                 
-                self.friendNewMsgNum = [[UILabel alloc] initWithFrame:CGRectMake(43, 3, 15, 15)];
-                self.friendNewMsgNum.backgroundColor = [UIColor redColor];
-                self.friendNewMsgNum.font = [UIFont systemFontOfSize:11.0];
-                self.friendNewMsgNum.textAlignment = NSTextAlignmentCenter;
-                self.friendNewMsgNum.layer.cornerRadius = self.friendNewMsgNum.frame.size.width / 2;
-                self.friendNewMsgNum.layer.masksToBounds = YES;
-                self.friendNewMsgNum.textColor = [UIColor whiteColor];
-                self.friendNewMsgNum.text = @"99";
-                [btnView addSubview:self.friendNewMsgNum];
-               
             }
                 break;
             case 1:
@@ -1489,8 +1484,19 @@
             case 2:
             {
                 
-                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addressBookAction:)];
+                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(newFriendAction:)];
                 [btnView addGestureRecognizer:tap];
+                
+                self.friendNewMsgNum = [[UILabel alloc] initWithFrame:CGRectMake(43, 3, 15, 15)];
+                self.friendNewMsgNum.backgroundColor = [UIColor redColor];
+                self.friendNewMsgNum.font = [UIFont systemFontOfSize:11.0];
+                self.friendNewMsgNum.textAlignment = NSTextAlignmentCenter;
+                self.friendNewMsgNum.layer.cornerRadius = self.friendNewMsgNum.frame.size.width / 2;
+                self.friendNewMsgNum.layer.masksToBounds = YES;
+                self.friendNewMsgNum.textColor = [UIColor whiteColor];
+                self.friendNewMsgNum.text = @"99";
+                [btnView addSubview:self.friendNewMsgNum];
+                
             }
                 break;
             case 3:
@@ -1503,7 +1509,7 @@
             case 4:
             {
                 
-                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(myGroupAction:)];
+                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(labelAction:)];
                 [btnView addGestureRecognizer:tap];
             }
                 break;
@@ -1524,7 +1530,7 @@
             case 7:
             {
                 
-                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(labelAction:)];
+                UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(addressBookAction:)];
                 [btnView addGestureRecognizer:tap];
             }
                 break;
