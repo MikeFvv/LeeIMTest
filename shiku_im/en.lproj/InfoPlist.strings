@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
-/// ooo<<< 改名字
+/// ooo<<< 改名字   吃饭
 CFBundleDisplayName = "矿矿";
 
 NSCameraUsageDescription = "Open the camera to record the video for message sending";
