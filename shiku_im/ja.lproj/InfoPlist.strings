@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleDisplayName = "嘟嘟";
+CFBundleDisplayName = "矿矿";
 
 NSCameraUsageDescription = "カメラの電源を入れて、メッセージ送信用のビデオを録画します";
 NSContactsUsageDescription = "このアプリを一緒に使用している友達を見つけるために、サーバーへの名簿データのアップロードを許可します";
