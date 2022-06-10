@@ -31,7 +31,7 @@
 #import <WebKit/WebKit.h>
 #import "JXChatViewController.h"
 
-
+//1111
 @implementation AppDelegate
 @synthesize window,faceView,mainVc,config,jxServer;
 @synthesize jxConstant;
