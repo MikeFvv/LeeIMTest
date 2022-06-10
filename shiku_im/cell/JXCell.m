@@ -50,8 +50,7 @@
         _headImageView.delegate = self;
         _headImageView.didTouch = @selector(headImageDidTouch);
         _headImageView.frame = CGRectMake(14,(self.height-45)*0.5,45,45);
-//        _headImageView.layer.cornerRadius = _headImageView.height*0.5;
-        _headImageView.layer.cornerRadius = 6;
+        _headImageView.layer.cornerRadius = _headImageView.height*0.5;
         _headImageView.layer.masksToBounds = YES;
 //        _headImageView.layer.borderWidth = 0.5;
         _headImageView.layer.borderColor = [UIColor darkGrayColor].CGColor;
@@ -563,14 +562,12 @@
         
         
         _headImageView.frame = CGRectMake(15, (56-40)*0.5,40,40);
-//        _headImageView.layer.cornerRadius = _headImageView.frame.size.width / 2;
-        _headImageView.layer.cornerRadius = 6;
+        _headImageView.layer.cornerRadius = _headImageView.frame.size.width / 2;
         self.lbTitle.frame = CGRectMake(CGRectGetMaxX(_headImageView.frame)+14, (56-54+20)*0.5, JX_SCREEN_WIDTH - 100 -CGRectGetMaxX(_headImageView.frame)-14, 54 - 20);
         self.lbSubTitle.frame = CGRectMake(CGRectGetMaxX(_headImageView.frame)+14, self.lbSubTitle.frame.origin.y+1, JX_SCREEN_WIDTH - 55 -CGRectGetMaxX(_headImageView.frame)-14, 26);
         self.lineView.frame = CGRectMake(CGRectGetMaxX(_headImageView.frame)+14, 56-0.5,JX_SCREEN_WIDTH,0.5);
     }
-//    _headImageView.layer.cornerRadius = _headImageView.height *0.5f; // lewis _headImageView.height *0.5;
-    _headImageView.layer.cornerRadius = 6;
+    _headImageView.layer.cornerRadius = _headImageView.height *0.5f; // lewis _headImageView.height *0.5;
 }
 
 @end
