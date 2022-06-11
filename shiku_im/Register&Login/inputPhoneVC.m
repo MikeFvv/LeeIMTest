@@ -307,7 +307,7 @@
         [registerBtn addTarget:self action:@selector(onGotoBack:) forControlEvents:UIControlEventTouchUpInside];
         [self.tableBody addSubview:registerBtn];
         
-        n = n+HEIGHT+INSETS+10;
+        n = n+HEIGHT+INSETS;
         UILabel *agreeLab = [[UILabel alloc] init];
         agreeLab.font = SYSFONT(13);
         agreeLab.text = Localized(@"JX_ByRegisteringYouAgree");
@@ -355,6 +355,10 @@
         
     }
     return self;
+}
+
+- (void)onGotoBack:(UIButton *)sender {
+    [super actionQuit];
 }
 
 - (void)passWordRightViewClicked:(UIButton *)but{

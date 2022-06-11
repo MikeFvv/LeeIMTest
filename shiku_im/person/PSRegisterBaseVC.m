@@ -14,13 +14,15 @@
 #import "resumeData.h"
 #import "JXActionSheetVC.h"
 #import "JXCameraVC.h"
+#import "RITLUtility.h"
 
-#define HEIGHT 56
+#define HEIGHT 46
 #define IMGSIZE 100
-
+#define MarginWidth 24
 
 @interface PSRegisterBaseVC ()<UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,JXActionSheetVCDelegate,JXCameraVCDelegate>
-
+    
+@property (nonatomic ,strong) UILabel *sexLabel;
 @end
 
 @implementation PSRegisterBaseVC
@@ -55,42 +57,84 @@
         iv.delegate = self;
         iv.didTouch = @selector(hideKeyboard);
         [self.tableBody addSubview:iv];
-//        [iv release];
+        self.tableBody.backgroundColor = [UIColor whiteColor];
         
-        _head = [[JXImageView alloc]initWithFrame:CGRectMake((JX_SCREEN_WIDTH-IMGSIZE)/2, INSETS, IMGSIZE, IMGSIZE)];
-        _head.layer.cornerRadius = 6;
+        self.view.backgroundColor = UIColor.redColor;
+        
+        UIImageView *topBackImageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, JX_SCREEN_WIDTH, 544/2)];
+        topBackImageView.userInteractionEnabled = YES;
+        topBackImageView.image = [UIImage imageNamed:@"login_topback"];
+        [self.view addSubview:topBackImageView];
+        
+        
+        _head = [[JXImageView alloc]initWithFrame:CGRectMake((JX_SCREEN_WIDTH-IMGSIZE)/2, 100, IMGSIZE, IMGSIZE)];
+        _head.layer.cornerRadius = 18;
         _head.layer.masksToBounds = YES;
         _head.didTouch = @selector(pickImage);
         _head.delegate = self;
-        _head.image = [UIImage imageNamed:@"avatar_normal"];
+        _head.image = [UIImage imageNamed:@"reg_avatar"];
         if(self.isRegister)
             s = user.userId;
         else
             s = g_myself.userId;
         [g_server getHeadImageSmall:s userName:resume.name imageView:_head];
-        [self.tableBody addSubview:_head];
+        [topBackImageView addSubview:_head];
 //        [_head release];
-        h = INSETS*2+IMGSIZE;
         
+        h = 100+IMGSIZE;
+        
+        
+        UILabel *duduLabel = [[UILabel alloc] initWithFrame: CGRectMake(JX_SCREEN_WIDTH/2-100/2, h+10, 100, 30)];
+        duduLabel.text = @"点击上传头像";
+        duduLabel.font = [UIFont boldSystemFontOfSize:14];
+        duduLabel.textColor = [UIColor whiteColor];
+        duduLabel.textAlignment = NSTextAlignmentCenter;
+        [topBackImageView addSubview:duduLabel];
+
+        h = h+20;
         
         NSString* workExp = [g_constant.workexp objectForKey:[NSNumber numberWithInt:resume.workexpId]];
         NSString* diploma = [g_constant.diploma objectForKey:[NSNumber numberWithInt:resume.diplomaId]];
         NSString* city = [g_constant getAddressForInt:resume.provinceId cityId:resume.cityId areaId:resume.areaId];
         
+        
+        
         iv = [self createButton:Localized(@"JX_Name") drawTop:YES drawBottom:YES must:YES click:nil];
-        iv.frame = CGRectMake(0, h, JX_SCREEN_WIDTH, HEIGHT);
+        iv.frame = CGRectMake(MarginWidth, h+10, JX_SCREEN_WIDTH-MarginWidth*2, HEIGHT);
+        iv.layer.cornerRadius = HEIGHT/2;
         _name = [self createTextField:iv default:resume.name hint:Localized(@"JX_InputName")];
-        h+=iv.frame.size.height;
+        h+=iv.frame.size.height+10;
         
         iv = [self createButton:Localized(@"JX_Sex") drawTop:NO drawBottom:YES must:YES click:nil];
-        iv.frame = CGRectMake(0, h, JX_SCREEN_WIDTH, HEIGHT);
+        iv.frame = CGRectMake(MarginWidth, h+10, JX_SCREEN_WIDTH-MarginWidth*2, HEIGHT);
+        iv.layer.cornerRadius = HEIGHT/2;
+        
+        UILabel *sexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 10, 50, 30)];
+        sexLabel.text = @"女";
+        sexLabel.font = [UIFont systemFontOfSize:14];
+        sexLabel.textColor = [UIColor darkGrayColor];
+        [iv addSubview:sexLabel];
+        _sexLabel = sexLabel;
+        
+        
         _sex = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:Localized(@"JX_Wuman"),Localized(@"JX_Man"),nil]];
-        _sex.frame = CGRectMake(JX_SCREEN_WIDTH -100 - INSETS,INSETS+3,100,HEIGHT-INSETS*2-6);
+        _sex.frame = CGRectMake(iv.frame.size.width-100-20,INSETS+3,100,30);
         _sex.selectedSegmentIndex = resume.sex;
+//        _sex.selectedSegmentTintColor = UIColor.blueColor; // HEXCOLOR(0x5081F9);
+        
+        
+        [_sex addTarget:self action:@selector(segmentedChanged:) forControlEvents:UIControlEventValueChanged];
+        
+        [_sex setBackgroundImage:[UIImage imageNamed:@"reg_select"]
+                                  forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+        [_sex setBackgroundImage:[UIImage imageNamed:@"reg_nor"]
+                                             forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        
+        _sex.backgroundColor = UIColor.whiteColor;
         //样式
 //        _sex.segmentedControlStyle= UISegmentedControlStyleBar;
-        _sex.tintColor = THEMECOLOR;
-        _sex.layer.cornerRadius = 5;
+        _sex.tintColor = [UIColor whiteColor];
+        _sex.layer.cornerRadius = 30/2;
         _sex.layer.borderWidth = 1.5;
         _sex.layer.borderColor = [THEMECOLOR CGColor];
         _sex.clipsToBounds = YES;
@@ -98,15 +142,15 @@
         _sex.selectedSegmentIndex = [user.sex boolValue];
         _sex.apportionsSegmentWidthsByContent = NO;
         [iv addSubview:_sex];
-//        [_sex release];
-        h+=iv.frame.size.height;
+        h+=iv.frame.size.height + 20;
         
         if (!resume.birthday) {
             resume.birthday = [[NSDate date] timeIntervalSince1970];
         }
         
-        iv = [self createButton:Localized(@"JX_BirthDay") drawTop:NO drawBottom:YES must:YES click:nil];
-        iv.frame = CGRectMake(0, h, JX_SCREEN_WIDTH, HEIGHT);
+        iv = [self createButton:@"生日" drawTop:NO drawBottom:YES must:YES click:nil];
+        iv.frame = CGRectMake(MarginWidth, h, JX_SCREEN_WIDTH-MarginWidth*2, HEIGHT);
+        iv.layer.cornerRadius = HEIGHT/2;
         _birthday = [self createTextField:iv default:[TimeUtil getDateStr:resume.birthday] hint:Localized(@"JX_BirthDay")];
         h+=iv.frame.size.height;
         
@@ -157,6 +201,17 @@
     return self;
 }
 
+-(void)segmentedChanged:(UISegmentedControl*)sender
+{
+    NSLog(@"sender: %ld",sender.selectedSegmentIndex); //输出当前的索引值
+    
+    if (sender.selectedSegmentIndex == 0) {
+        self.sexLabel.text = @"女";
+    } else {
+        self.sexLabel.text = @"男";
+    }
+}
+
 -(void)dealloc{
 //    NSLog(@"PSRegisterBaseVC.dealloc");
 //    [_image release];
@@ -172,6 +227,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    
     // Do any additional setup after loading the view.
 }
 
@@ -321,8 +379,10 @@
 }
 
 -(JXImageView*)createButton:(NSString*)title drawTop:(BOOL)drawTop drawBottom:(BOOL)drawBottom must:(BOOL)must click:(SEL)click{
+    
     JXImageView* btn = [[JXImageView alloc] init];
-    btn.backgroundColor = [UIColor whiteColor];
+    btn.backgroundColor = RITLColorFromIntRBG(244, 246, 248);
+    
     btn.userInteractionEnabled = YES;
     if(click)
         btn.didTouch = click;
@@ -330,53 +390,26 @@
         btn.didTouch = @selector(hideKeyboard);
     btn.delegate = self;
     [self.tableBody addSubview:btn];
-//    [btn release];
     
-    if(must){
-        UILabel* p = [[UILabel alloc] initWithFrame:CGRectMake(INSETS, 5, 20, HEIGHT-5)];
-        p.text = @"*";
-        p.font = g_factory.font18;
-        p.backgroundColor = [UIColor clearColor];
-        p.textColor = [UIColor redColor];
-        p.textAlignment = NSTextAlignmentCenter;
-        [btn addSubview:p];
-//        [p release];
-    }
-    
-    JXLabel* p = [[JXLabel alloc] initWithFrame:CGRectMake(30, 0, 130, HEIGHT)];
+    JXLabel* p = [[JXLabel alloc] initWithFrame:CGRectMake(20, 0, 130, HEIGHT)];
     p.text = title;
     p.font = g_factory.font15;
     p.backgroundColor = [UIColor clearColor];
     p.textColor = [UIColor blackColor];
     [btn addSubview:p];
-//    [p release];
     
-    if(drawTop){
-        UIView* line = [[UIView alloc] initWithFrame:CGRectMake(0,0,JX_SCREEN_WIDTH,0.5)];
-        line.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
-        [btn addSubview:line];
-//        [line release];
-    }
-    
-    if(drawBottom){
-        UIView* line = [[UIView alloc]initWithFrame:CGRectMake(0,HEIGHT-0.5,JX_SCREEN_WIDTH,0.5)];
-        line.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
-        [btn addSubview:line];
-//        [line release];
-    }
     
     if(click){
         UIImageView* iv;
         iv = [[UIImageView alloc] initWithFrame:CGRectMake(JX_SCREEN_WIDTH-INSETS-20-3, 13, 20, 20)];
         iv.image = [UIImage imageNamed:@"set_list_next"];
         [btn addSubview:iv];
-//        [iv release];
     }
     return btn;
 }
 
 -(UITextField*)createTextField:(UIView*)parent default:(NSString*)s hint:(NSString*)hint{
-    UITextField* p = [[UITextField alloc] initWithFrame:CGRectMake(JX_SCREEN_WIDTH/2,INSETS,JX_SCREEN_WIDTH/2,HEIGHT-INSETS*2)];
+    UITextField* p = [[UITextField alloc] initWithFrame:CGRectMake(70,INSETS,JX_SCREEN_WIDTH/2,HEIGHT-INSETS*2)];
     p.delegate = self;
     p.autocorrectionType = UITextAutocorrectionTypeNo;
     p.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -384,12 +417,14 @@
     p.borderStyle = UITextBorderStyleNone;
     p.returnKeyType = UIReturnKeyDone;
     p.clearButtonMode = UITextFieldViewModeAlways;
-    p.textAlignment = NSTextAlignmentRight;
+    p.textAlignment = NSTextAlignmentLeft;
     p.userInteractionEnabled = YES;
     p.text = s;
     p.placeholder = hint;
     p.font = g_factory.font15;
     [parent addSubview:p];
+    
+//    p.backgroundColor = UIColor.greenColor;
 //    [p release];
     return p;
 }
