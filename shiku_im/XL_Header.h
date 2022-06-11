@@ -19,10 +19,12 @@
 // 118.107.44.103  ？
 // 20.187.93.69  小蜜桃
 // 150.109.149.36  嘟嘟  ddchat1.com
+// 20.24.81.108  嘟嘟
 // 43.129.187.14  矿矿
 
+
 //接口前缀      self.apiUrl = @"http://192.168.0.103:8092/";
-#define XL_API_URL                      @"http://43.129.187.14:8092/"
+#define XL_API_URL                      @"http://20.24.81.108:8092/"
 
 //AppDelegate·
 //config.backUrl = @"http://imapi.suliao6688.com/";
@@ -32,13 +34,13 @@
 //config.downloadUrl = @"http://imapi.suliao6688.com/";
 //config.XMPPHost = @"http://imapi.suliao6688.com";
 //config.XMPPDomain = @"http://imapi.suliao6688.com";
-#define XL_API_BACK_URL                 @"http://43.129.187.14:8092/"
-#define XL_API_API_URL                  @"http://43.129.187.14:8092/"
-#define XL_API_UPLOAD_URL               @"http://43.129.187.14:8088/"
-#define XL_API_DOWNLOAD_AVATAR_URL      @"http://43.129.187.14:8089/"
-#define XL_API_DOWNLOAD_URL             @"http://43.129.187.14:8089/"
-#define XL_API_XMPP_HOST                @"http://43.129.187.14"
-#define XL_API_XMPP_DOMAIN              @"http://43.129.187.14"
+#define XL_API_BACK_URL                 @"http://20.24.81.108:8092/"
+#define XL_API_API_URL                  @"http://20.24.81.108:8092/"
+#define XL_API_UPLOAD_URL               @"http://20.24.81.108:8088/"
+#define XL_API_DOWNLOAD_AVATAR_URL      @"http://20.24.81.108:8089/"
+#define XL_API_DOWNLOAD_URL             @"http://20.24.81.108:8089/"
+#define XL_API_XMPP_HOST                @"http://20.24.81.108"
+#define XL_API_XMPP_DOMAIN              @"http://20.24.81.108"
 //是否永久禁言    1是  2否
 #define XL_PermanentlyBanned            @YES
 

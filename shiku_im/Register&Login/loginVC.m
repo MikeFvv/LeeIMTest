@@ -16,7 +16,11 @@
 #import "JXLocation.h"
 #import "UIImage+Color.h"
 #import "UIView+Frame.h"
-#define HEIGHT 44
+#import "RITLUtility.h"
+
+
+#define HEIGHT 46
+#define MarginWidth 24
 #define tyCurrentWindow [[UIApplication sharedApplication].windows firstObject]
 
 @interface loginVC ()<UITextFieldDelegate,QCheckBoxDelegate,JXLocationDelegate,JXLocationDelegate>
@@ -47,67 +51,33 @@
 {
     self = [super init];
     if (self) {
-//        _pSelf = self;
+        
         _user = [[JXUserObject alloc] init];
-        //        self.isGotoBack   = self.isSwitchUser;
-//        self.title = Localized(@"JX_Login");
-        
-        
-//        UIBarButtonItem *rightBarButtomItem = [[UIBarButtonItem alloc]initWithTitle:@"注册" style:UIBarButtonItemStyleDone target:self action:@selector(onRegister)];
-//        self.navigationItem.rightBarButtonItem = rightBarButtomItem;
-        
-
-        
-        
         self.heightFooter = 0;
         self.heightHeader = JX_SCREEN_TOP;
-        //self.view.frame = CGRectMake(0, 0, JX_SCREEN_WIDTH, JX_SCREEN_HEIGHT);
-//        if (_isThirdLogin) {
-////            self.isGotoBack = YES;
-//            self.title = Localized(@"JX_BindNo.");
-//        }
         if (self.isSMSLogin) {
-//            self.title = Localized(@"JX_SMSLogin");
             self.isGotoBack = YES;
         }
         
         g_server.isManualLogin = NO;
-
+        
         [self createHeadAndFoot];
-//        self.tableBody.backgroundColor = [UIColor whiteColor];
         self.tableBody.backgroundColor = [UIColor clearColor];
         _myToken = [g_default objectForKey:kMY_USER_TOKEN];
-
+        
         int n = INSETS;
         g_server.isLogin = NO;
         g_navigation.lastVC = nil;
         
-        //注册用户
-        CGSize size =[Localized(@"JX_Register") boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:g_factory.font16} context:nil].size;
-        UIButton *registerBtn = [UIButton buttonWithType:0];
-        registerBtn.frame  = CGRectMake(JX_SCREEN_WIDTH-size.width-20, JX_SCREEN_TOP - 30, size.width, 20);
-        registerBtn.titleLabel.font = g_factory.font16;
-        [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [registerBtn setTitle:Localized(@"JX_Register") forState:UIControlStateNormal];
-        registerBtn.custom_acceptEventInterval = 1.0f;
-        [registerBtn addTarget:self action:@selector(onRegister) forControlEvents:UIControlEventTouchUpInside];
-        registerBtn.hidden = self.isSMSLogin;
-        
-        [self.tableHeader addSubview:registerBtn];
-        
-
-        #pragma mark - 莫杭修改
         UIButton* btn = [UIFactory createButtonWithTitle:Localized(@"JX_SetupServer") titleFont:[UIFont systemFontOfSize:15] titleColor:[UIColor whiteColor] normal:nil highlight:nil];
         [btn setTitleColor:THESIMPLESTYLE ? [UIColor blackColor] : [UIColor whiteColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(onSetting) forControlEvents:UIControlEventTouchUpInside];
         btn.frame = CGRectMake(JX_SCREEN_WIDTH-160, JX_SCREEN_TOP - 38, 83, 30);
         btn.hidden = _isThirdLogin || self.isSMSLogin;
-//        [self.tableHeader addSubview:btn];
         
-
+        
         n += 60;
-//        Localized(@"JX_Login");//@"使用密码登录"
-        UILabel *titleL = [UIFactory createLabelWith:CGRectMake(50, n, JX_SCREEN_WIDTH-100, 30) text:Localized(@"JX_Login")];
+        UILabel *titleL = [UIFactory createLabelWith:CGRectMake(50, n, JX_SCREEN_WIDTH-100, 30) text:@""]; // Localized(@"JX_Login")
         titleL.font = [UIFont systemFontOfSize:30 weight:UIFontWeightRegular];
         titleL.textColor =[UIColor whiteColor];
         titleL.textAlignment = NSTextAlignmentCenter;
@@ -115,44 +85,30 @@
             titleL.text = Localized(@"JX_SMSLogin"); //@"使用短信登录";
         }
         [self.tableBody addSubview:titleL];
-        //酷聊icon
-//        UIImageView * kuliaoIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"酷聊120"]];
-//        kuliaoIconView.frame = CGRectMake((JX_SCREEN_WIDTH-95)/2, n, 95, 95);
-//        [self.tableBody addSubview:kuliaoIconView];
-        
         
         //酷聊title
         NSString * titleStr;
 #if TAR_IM
         titleStr = APP_NAME;
-//#elif TAR_LIVE
-//        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-//        // app名称
-//        titleStr = [infoDictionary objectForKey:@"CFBundleDisplayName"];
 #endif
-//        UILabel * kuliaoTitleLabel = [UIFactory createLabelWith:CGRectMake(0, CGRectGetMaxY(kuliaoIconView.frame), 100, 35) text:titleStr font:g_factory.font20 textColor:[UIColor blackColor] backgroundColor:[UIColor clearColor]];
-//        kuliaoTitleLabel.center = CGPointMake(kuliaoIconView.center.x, kuliaoTitleLabel.center.y);
-//        kuliaoTitleLabel.textAlignment = NSTextAlignmentCenter;
-//        [self.tableBody addSubview:kuliaoTitleLabel];
-        
-//        UIButton* lb;
-        /*
-         lb = [[JXLabel alloc]initWithFrame:CGRectMake(10, 100, 60, 30)];
-         lb.textColor = [UIColor blackColor];
-         lb.backgroundColor = [UIColor clearColor];
-         lb.text = @"手机：";
-         [self.tableBody addSubview:lb];
-         [lb release];
-         
-         lb = [[JXLabel alloc]initWithFrame:CGRectMake(10, 150, 60, 30)];
-         lb.textColor = [UIColor blackColor];
-         lb.backgroundColor = [UIColor clearColor];
-         lb.text = @"密码：";
-         [self.tableBody addSubview:lb];
-         [lb release];*/
-        //(INSETS, n, self_width-INSETS-INSETS, HEIGHT)
         
         n += 70;
+        
+        
+        UIImageView *topBackImageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, JX_SCREEN_WIDTH, 544/2)];
+        topBackImageView.image = [UIImage imageNamed:@"login_topback"];
+        [self.bgImageview addSubview:topBackImageView];
+        
+        UIImageView *loginLogoImg = [[UIImageView alloc] initWithFrame: CGRectMake(JX_SCREEN_WIDTH/2-232/2/2, 80, 232/2, 218/2)];
+        loginLogoImg.image = [UIImage imageNamed:@"login_logo"];
+        [topBackImageView addSubview:loginLogoImg];
+        
+        UILabel *duduLabel = [[UILabel alloc] initWithFrame: CGRectMake(JX_SCREEN_WIDTH/2-100/2, 80+218/2, 100, 30)];
+        duduLabel.text = @"DUDU";
+        duduLabel.font = [UIFont boldSystemFontOfSize:18];
+        duduLabel.textColor = [UIColor whiteColor];
+        duduLabel.textAlignment = NSTextAlignmentCenter;
+        [topBackImageView addSubview:duduLabel];
         
         UILabel *areaL = [UIFactory createLabelWith:CGRectMake(50, n,JX_SCREEN_WIDTH-100, HEIGHT) text:@""];
         areaL.textColor =[UIColor whiteColor];
@@ -160,88 +116,49 @@
         [self.tableBody addSubview:areaL];
         self.areaLabel = areaL;
         
-        UIImageView *rightArraw  =[[UIImageView alloc]initWithFrame:CGRectMake( areaL.width-20, (HEIGHT-20)*0.5, 20, 20)];
-        rightArraw.image = [UIImage imageNamed:@"set_list_next"];
-        [areaL addSubview:rightArraw];
+        // 选择国际电话区号
+//        UIImageView *rightArraw  =[[UIImageView alloc]initWithFrame:CGRectMake( areaL.width-20, (HEIGHT-20)*0.5, 20, 20)];
+//        rightArraw.image = [UIImage imageNamed:@"set_list_next"];
+//        [areaL addSubview:rightArraw];
+//
+////        UIView *areaLine = [[UIView alloc] initWithFrame:CGRectMake(0, HEIGHT-4, areaL.frame.size.width, 0.5)];
+////        areaLine.backgroundColor = HEXCOLOR(0xD6D6D6);
+////        [areaL addSubview:areaLine];
+//
+//        UITapGestureRecognizer *areaTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(areaCodeBtnClick:)];
+//        areaL.userInteractionEnabled = YES;
+//        [areaL addGestureRecognizer:areaTap];
         
-        UIView *areaLine = [[UIView alloc] initWithFrame:CGRectMake(0, HEIGHT-4, areaL.frame.size.width, 0.5)];
-         areaLine.backgroundColor = HEXCOLOR(0xD6D6D6);
-         [areaL addSubview:areaLine];
-        
-        UITapGestureRecognizer *areaTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(areaCodeBtnClick:)];
-        areaL.userInteractionEnabled = YES;
-        [areaL addGestureRecognizer:areaTap];
-        
-        n = n+HEIGHT+INSETS+5;;
+        n = n+HEIGHT+INSETS+50;
         
         //区号
         if (!_phone) {
-            _phone = [UIFactory createTextFieldWith:CGRectMake(50, n, JX_SCREEN_WIDTH-50*2, HEIGHT) delegate:self returnKeyType:UIReturnKeyNext secureTextEntry:NO placeholder:Localized(@"JX_InputPhone") font:g_factory.font16];
+            _phone = [UIFactory createTextFieldWith:CGRectMake(MarginWidth, n, JX_SCREEN_WIDTH-MarginWidth*2, HEIGHT) delegate:self returnKeyType:UIReturnKeyNext secureTextEntry:NO placeholder:Localized(@"JX_InputPhone") font:g_factory.font16];
+            
+            _phone.layer.cornerRadius = HEIGHT/2;
+            _phone.backgroundColor =  RITLColorFromIntRBG(244, 246, 248);
             _phone.attributedPlaceholder = [[NSAttributedString alloc] initWithString:Localized(@"JX_InputPhone") attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
-            _phone.textColor =[UIColor whiteColor];
+            _phone.textColor =[UIColor blackColor];
             _phone.clearButtonMode = UITextFieldViewModeWhileEditing;
             _phone.keyboardType = UIKeyboardTypeNumberPad;
             _phone.borderStyle = UITextBorderStyleNone;
+            
+            UIView *idLeftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 50, 40)];
+            _phone.leftView = idLeftView;
+            _phone.leftViewMode = UITextFieldViewModeAlways;
+            UIButton *idLeftBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 10, 20, 20)];
+            [idLeftBtn setBackgroundImage:[UIImage imageNamed:@"login_id"] forState:UIControlStateNormal];
+            [idLeftView addSubview:idLeftBtn];
+            
             [self.tableBody addSubview:_phone];
             _phone.delegate = self;
-//            [_phone addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
             
-//            UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, HEIGHT)];
-//            _phone.leftView = leftView;
-//            _phone.leftViewMode = UITextFieldViewModeAlways;
-//            UIImageView *phIgView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 11, 22, 22)];
-//            phIgView.image = [UIImage imageNamed:@"account"];
-//            phIgView.contentMode = UIViewContentModeScaleAspectFit;
-//            [leftView addSubview:phIgView];
- 
-            
-//            UIView *riPhView = [[UIView alloc] initWithFrame:CGRectMake(_phone.frame.size.width-44, 0, HEIGHT+10, HEIGHT)];
-//            _phone.rightView = riPhView;
-//            _phone.rightViewMode = UITextFieldViewModeAlways;
             [_phone addTarget:self action:@selector(longLimit:) forControlEvents:UIControlEventEditingChanged];
-//            NSString *areaStr;
-//            if (![g_default objectForKey:kMY_USER_AREACODE]) {
-//                areaStr = @"+86";
-//            } else {
-//                areaStr = [NSString stringWithFormat:@"+%@",[g_default objectForKey:kMY_USER_AREACODE]];
-//            }
-//            _areaCodeBtn = [[UIButton alloc] initWithFrame:CGRectMake(24, 11, 60, 22)];
-//            [_areaCodeBtn setTitle:areaStr forState:UIControlStateNormal];
-//            _areaCodeBtn.titleLabel.font = SYSFONT(16);
-//            [_areaCodeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-////            [_areaCodeBtn setImage:[UIImage imageNamed:@"account"] forState:UIControlStateNormal];
-//            _areaCodeBtn.custom_acceptEventInterval = 1.0f;
-//            [_areaCodeBtn addTarget:self action:@selector(areaCodeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-////            [self resetBtnEdgeInsets:_areaCodeBtn];
-//            [leftView addSubview:_areaCodeBtn];
             
-            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, HEIGHT-4, _phone.frame.size.width, 0.5)];
-             line.backgroundColor = HEXCOLOR(0xD6D6D6);
-             [_phone addSubview:line];
-         }
+        }
         
-        //账号
-        //        _phone = [[UITextField alloc] initWithFrame:CGRectMake(50, n+170, JX_SCREEN_WIDTH-50*2, HEIGHT)];
-        //        _phone.delegate = self;
-        //        _phone.autocorrectionType = UITextAutocorrectionTypeNo;
-        //        _phone.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        //        _phone.enablesReturnKeyAutomatically = YES;
-        //        _phone.borderStyle = UITextBorderStyleRoundedRect;
-        //        _phone.returnKeyType = UIReturnKeyDone;
-        //        _phone.clearButtonMode = UITextFieldViewModeWhileEditing;
-        //        _phone.placeholder = Localized(@"JX_InputPhone");
-        //        _phone.userInteractionEnabled = YES;
-        //        [_phone addTarget:self action:@selector(longLimit:) forControlEvents:UIControlEventEditingChanged];
-        //        [self.tableBody addSubview:_phone];
-        //        [_phone release];
         n = n+HEIGHT+INSETS+5;
-        //监听账号是否被删除
-        //
-        //        UIImageView *leftView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 34, 30)];
-        //        leftView.image = [UIImage imageNamed:@"userhead"];
-        //        leftView.contentMode = UIViewContentModeScaleAspectFit;
-        //        _phone.leftView = leftView;
-        //        _phone.leftViewMode = UITextFieldViewModeAlways;
+        
         
         if (self.isSMSLogin) {
             //图片验证码
@@ -251,13 +168,7 @@
             _imgCode.clearButtonMode = UITextFieldViewModeWhileEditing;
             [self.tableBody addSubview:_imgCode];
             _imgCode.textColor =[UIColor whiteColor];
-//            UIView *imCView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, HEIGHT, HEIGHT)];
-//            _imgCode.leftView = imCView;
-//            _imgCode.leftViewMode = UITextFieldViewModeAlways;
-//            UIImageView *imCIView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 11, 22, 22)];
-//            imCIView.image = [UIImage imageNamed:@"verify"];
-//            imCIView.contentMode = UIViewContentModeScaleAspectFit;
-//            [imCView addSubview:imCIView];
+            
             
             UIView *imCLine = [[UIView alloc] initWithFrame:CGRectMake(0, HEIGHT-4, _phone.frame.size.width, 0.5)];
             imCLine.backgroundColor = HEXCOLOR(0xD6D6D6);
@@ -283,32 +194,36 @@
         }
         
         //密码
-        _pwd = [[UITextField alloc] initWithFrame:CGRectMake(50, n, JX_SCREEN_WIDTH-50*2, HEIGHT)];
+        _pwd = [[UITextField alloc] initWithFrame:CGRectMake(MarginWidth, n, JX_SCREEN_WIDTH-MarginWidth*2, HEIGHT)];
+        _pwd.layer.cornerRadius = HEIGHT/2;
+        _pwd.backgroundColor =  RITLColorFromIntRBG(244, 246, 248);
         _pwd.delegate = self;
         _pwd.font = g_factory.font16;
         _pwd.autocorrectionType = UITextAutocorrectionTypeNo;
         _pwd.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _pwd.enablesReturnKeyAutomatically = YES;
-//        _pwd.borderStyle = UITextBorderStyleRoundedRect;
+        //        _pwd.borderStyle = UITextBorderStyleRoundedRect;
         _pwd.returnKeyType = UIReturnKeyDone;
         _pwd.clearButtonMode = UITextFieldViewModeWhileEditing;
         _pwd.attributedPlaceholder = [[NSAttributedString alloc] initWithString:Localized(@"JX_InputPassWord") attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
         _pwd.secureTextEntry = !self.isSMSLogin;
         _pwd.userInteractionEnabled = YES;
-        _pwd.textColor =[UIColor whiteColor];
+        _pwd.textColor =[UIColor blackColor];
+        
+        UIView *pwLeftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 50, 40)];
+        _pwd.leftView = pwLeftView;
+        _pwd.leftViewMode = UITextFieldViewModeAlways;
+        UIButton *pwLeftBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 10, 20, 20)];
+        [pwLeftBtn setBackgroundImage:[UIImage imageNamed:@"login_pw"] forState:UIControlStateNormal];
+        [pwLeftView addSubview:pwLeftBtn];
+        
         [self.tableBody addSubview:_pwd];
         
-//        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(_pwd.frame.size.width-.5, 8, .5, (HEIGHT-8)/2)];
-//        line.backgroundColor = HEXCOLOR(0xD6D6D6);
-//        [_pwd addSubview:line];
         
-
-
         
         if (self.isSMSLogin) {
             _pwd.width = JX_SCREEN_WIDTH-50*2-100;
             _pwd.attributedPlaceholder = [[NSAttributedString alloc] initWithString:Localized(@"JX_InputMessageCode") attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
-//            JX_Send
             _send = [UIButton buttonWithType:0];
             [_send setTitle:@"发送验证码" forState:0];
             [_send setTitleColor:[UIColor whiteColor] forState:0];
@@ -321,7 +236,7 @@
             [self.tableBody addSubview:_send];
             
         }else {
-            UIView *eyeView = [[UIView alloc]initWithFrame:CGRectMake(_pwd.frame.size.width-40, 0, 40, 40)];
+            UIView *eyeView = [[UIView alloc]initWithFrame:CGRectMake(_pwd.frame.size.width-60, 0, 40, 40)];
             _pwd.rightView = eyeView;
             _pwd.rightViewMode = UITextFieldViewModeAlways;
             UIButton *rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 12, 20, 16)];
@@ -330,45 +245,12 @@
             [rightBtn addTarget:self action:@selector(passWordRightViewClicked:) forControlEvents:UIControlEventTouchUpInside];
             [eyeView addSubview:rightBtn];
         }
-
+        
         
         n = n+10+INSETS;
         
-//        UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, HEIGHT, HEIGHT)];
-//        _pwd.leftView = rightView;
-//        _pwd.leftViewMode = UITextFieldViewModeAlways;
-//        UIImageView *riIgView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 11, 22, 22)];
-//        riIgView.image = [UIImage imageNamed:@"password"];
-//        riIgView.contentMode = UIViewContentModeScaleAspectFit;
-//        [rightView addSubview:riIgView];
-        
-        UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0, HEIGHT-4, _pwd.frame.size.width, 0.5)];
-        verticalLine.backgroundColor = HEXCOLOR(0xD6D6D6);
-        [_pwd addSubview:verticalLine];
-        
         n += 6;
-        //忘记密码
-//        UIButton *lbUser = [[UIButton alloc]initWithFrame:CGRectMake(50, n, 100, 20)];
-//        [lbUser setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//        [lbUser setTitle:Localized(@"JX_ForgetPassWord") forState:UIControlStateNormal];
-//        lbUser.titleLabel.font = g_factory.font16;
-//        lbUser.custom_acceptEventInterval = 1.0f;
-//        [lbUser addTarget:self action:@selector(onForget) forControlEvents:UIControlEventTouchUpInside];
-//        lbUser.titleEdgeInsets = UIEdgeInsetsMake(0, -27, 0, 0);
-//        [self.tableBody addSubview:lbUser];
-//        _forgetBtn = lbUser;
-//
-//        //注册用户
-//        CGSize size =[Localized(@"JX_Register") boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:g_factory.font16} context:nil].size;
-//        UIButton *lb = [[UIButton alloc]initWithFrame:CGRectMake(JX_SCREEN_WIDTH-50-(140 - (140 - size.width) / 2), n, 140, 20)];
-//        lb.titleLabel.font = g_factory.font16;
-//        [lb setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//        [lb setTitle:Localized(@"JX_Register") forState:UIControlStateNormal];
-//        lb.custom_acceptEventInterval = 1.0f;
-//        [lb addTarget:self action:@selector(onRegister) forControlEvents:UIControlEventTouchUpInside];
-//        lb.hidden = self.isSMSLogin;
-//
-//        [self.tableBody addSubview:lb];
+        
         
         if (!self.isSMSLogin) {
             n = n+36;
@@ -376,72 +258,10 @@
             n = n+36;
         }
         
-//        if (![[g_default objectForKey:@"agreement"] boolValue]) {            //用户协议
-//            UIView * protocolView = [[UIView alloc] init];
-//            [self.tableBody addSubview:protocolView];
-////
-////            UIButton * catProtocolbtn = [UIButton buttonWithType:UIButtonTypeSystem];
-////            catProtocolbtn.frame = CGRectMake(0, 0, protocolView.frame.size.width, 25);
-//            NSString * agreeStr = Localized(@"JX_IAgree");
-//            NSString * protocolStr = Localized(@"JX_ShikuProtocolTitle");
-//
-////            NSString * agreeProtocolStr = [NSString stringWithFormat:@"%@%@",agreeStr,protocolStr];
-////            NSMutableAttributedString* tncString = [[NSMutableAttributedString alloc] initWithString:agreeProtocolStr];
-////
-////            [tncString addAttribute:NSUnderlineStyleAttributeName
-////                              value:@(NSUnderlineStyleSingle)
-////                              range:(NSRange){agreeStr.length,[protocolStr length]}];
-////            [tncString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor]  range:NSMakeRange(agreeStr.length,[protocolStr length])];
-////            [tncString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor]  range:NSMakeRange(0,agreeStr.length)];
-////            [tncString addAttribute:NSUnderlineColorAttributeName value:[UIColor blueColor] range:(NSRange){agreeStr.length,[protocolStr length]}];
-////            [catProtocolbtn setAttributedTitle:tncString forState:UIControlStateNormal];
-////            [catProtocolbtn addTarget:self action:@selector(catUserProtocol) forControlEvents:UIControlEventTouchUpInside];
-////            [protocolView addSubview:catProtocolbtn];
-//
-//            UIButton *agrBtn = [[UIButton alloc] init];
-//            CGSize agreSize = [agreeStr boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:agrBtn.titleLabel.font} context:nil].size;
-//            agrBtn.frame = CGRectMake(0, 0, agreSize.width, agreSize.height);
-//            [agrBtn setTitle:agreeStr forState:UIControlStateNormal];
-//            [agrBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-//            agrBtn.titleLabel.font = SYSFONT(15);
-//            [agrBtn addTarget:self
-//                       action:@selector(agrBtnAction:)
-//             forControlEvents:UIControlEventTouchUpInside];
-//            [protocolView addSubview:agrBtn];
-//
-//            UILabel *protocolLab = [[UILabel alloc] init];
-//            CGSize proSize = [protocolStr boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:protocolLab.font} context:nil].size;
-//            protocolLab.frame = CGRectMake(CGRectGetMaxX(agrBtn.frame), 0, proSize.width, proSize.height);
-//            protocolLab.textColor = [UIColor blueColor];
-//            protocolLab.font = SYSFONT(16);
-//            NSDictionary *attribtDic = @{NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]};
-//            NSMutableAttributedString *attribtStr = [[NSMutableAttributedString alloc]initWithString:protocolStr attributes:attribtDic];
-//            protocolLab.attributedText = attribtStr;
-//            [protocolView addSubview:protocolLab];
-//            protocolLab.userInteractionEnabled = YES;
-//            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(catUserProtocol)];
-//            [protocolLab addGestureRecognizer:tap];
-//
-//            CGFloat w = agreSize.width+proSize.width;
-//            protocolView.frame = CGRectMake((JX_SCREEN_WIDTH -w)/2, n, w, 25);
-//            _checkProtocolBtn = [[QCheckBox alloc] initWithDelegate:self];
-//            [self.tableBody addSubview:_checkProtocolBtn];
-//            _checkProtocolBtn.frame = CGRectMake((JX_SCREEN_WIDTH -w)/2-20, n, 20, 20);
-//
-////            CGSize size = [agreeProtocolStr boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:catProtocolbtn.titleLabel.font} context:nil].size;
-////            _checkProtocolBtn.frame = CGRectMake((catProtocolbtn.frame.size.width - size.width) / 2 - 28, 3, 20, 20);
-//
-//
-//            n+=25;
-//        }
-        
         n+=20+10;
         
-        //登陆按钮
-//        _btn = [UIFactory createCommonButton:Localized(@"JX_LoginNow") target:self action:@selector(onClick)];
-        
         _btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_btn setTitle:Localized(@"JX_LoginNow") forState:UIControlStateNormal];
+        [_btn setTitle:@"登录" forState:UIControlStateNormal];
         [_btn addTarget:self action:@selector(onClick) forControlEvents:UIControlEventTouchUpInside];
         _btn.custom_acceptEventInterval = 1.0f;
         _btn.backgroundColor = THEMECOLOR;
@@ -449,42 +269,52 @@
         UIImage *backgroundImage = [UIImage createImageWithColor:HEXCOLOR(0x3F94F7)];
         [_btn setBackgroundImage: backgroundImage forState:UIControlStateNormal];
         [_btn setBackgroundImage:[UIImage createImageWithColor:HEXCOLOR(0x3F94F7)] forState:UIControlStateHighlighted];
-
-        [_btn.titleLabel setFont:g_factory.font17];
+        
+        [_btn.titleLabel setFont:g_factory.font16];
         
         _btn.clipsToBounds = YES;
-        _btn.frame = CGRectMake(50, n, JX_SCREEN_WIDTH-100, HEIGHT);
+        _btn.frame = CGRectMake(MarginWidth, n, JX_SCREEN_WIDTH-MarginWidth*2, HEIGHT);
         _btn.layer.cornerRadius = HEIGHT*0.5;
         _btn.userInteractionEnabled = NO;
         [self.tableBody addSubview:_btn];
         n = n+HEIGHT+INSETS;
         
+        //注册用户
+        CGSize size =[@"注册用户" boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:g_factory.font16} context:nil].size;
+        UIButton *registerBtn = [UIButton buttonWithType:0];
+        registerBtn.frame  = CGRectMake(60, n+20, JX_SCREEN_WIDTH-60*2, HEIGHT);
+        registerBtn.titleLabel.font = g_factory.font16;
+        [registerBtn setTitleColor:RITLColorFromIntRBG(38, 108, 230) forState:UIControlStateNormal];
+        [registerBtn setTitle:@"注册用户" forState:UIControlStateNormal];
+        registerBtn.custom_acceptEventInterval = 1.0f;
+        [registerBtn addTarget:self action:@selector(onRegister) forControlEvents:UIControlEventTouchUpInside];
+        registerBtn.hidden = self.isSMSLogin;
+        
+        [self.tableBody addSubview:registerBtn];
+        
+        
+        
         // 屏幕太小，第三方登录超过登录界面，就另外计算y
         CGFloat wxWidth = 48;
         BOOL isSmall = JX_SCREEN_HEIGHT-JX_SCREEN_TOP - wxWidth - 30 <= CGRectGetMaxY(_btn.frame)+30;
         CGFloat loginY = CGRectGetMaxY(_btn.frame) + 90;
-//        CGFloat loginY = isSmall ? CGRectGetMaxY(_btn.frame) + 30 : JX_SCREEN_HEIGHT-JX_SCREEN_TOP - wxWidth - 160;
         UIImageView *wxLogin = [[UIImageView alloc] initWithFrame:CGRectMake((JX_SCREEN_WIDTH-wxWidth-wxWidth-5)/3, loginY, wxWidth, wxWidth)];
         wxLogin.image = [UIImage imageNamed:@"wechat_icon"];
         wxLogin.userInteractionEnabled = YES;
-//        [self.tableBody addSubview:wxLogin];
+        //        [self.tableBody addSubview:wxLogin];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didWechatToLogin:)];
         [wxLogin addGestureRecognizer:tap];
         wxLogin.hidden = (_isThirdLogin || self.isSMSLogin);
         if (isSmall) {
             self.tableBody.contentSize = CGSizeMake(0, CGRectGetMaxY(wxLogin.frame)+20);
         }
-        
-        //短信登录
-//        UIImageView *smsLogin = [[UIImageView alloc] initWithFrame:CGRectMake((JX_SCREEN_WIDTH-wxWidth-wxWidth)/3*2+wxWidth, loginY, wxWidth, wxWidth)];
-        
-//         短信登录
+        //         短信登录
         UIImageView *smsLogin = [[UIImageView alloc] initWithFrame:CGRectMake((JX_SCREEN_WIDTH - wxWidth) / 2, JX_SCREEN_HEIGHT-JX_SCREEN_TOP - wxWidth - 100, wxWidth, wxWidth)];
         smsLogin.image = [UIImage imageNamed:@"sms_login"];
         smsLogin.userInteractionEnabled = YES;
         [self.tableBody addSubview:smsLogin];
-
-
+        
+        
         UILabel *titleLabel = [UILabel new];
         titleLabel.text = @"短信登录";
         titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -494,15 +324,14 @@
         [self.tableBody addSubview:titleLabel];
         
         
-//        忘记密码
+        //        忘记密码
         UIButton *lbUser = [[UIButton alloc]initWithFrame:CGRectMake((JX_SCREEN_WIDTH-70)*0.5, titleLabel.bottom+20, 70, 20)];
-//        UIButton *lbUser = [[UIButton alloc]initWithFrame:CGRectMake((JX_SCREEN_WIDTH-70)*0.5, JX_SCREEN_HEIGHT-140, 70, 20)];
         [lbUser setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [lbUser setTitle:Localized(@"JX_ForgetPassWord") forState:UIControlStateNormal];
         lbUser.titleLabel.font = [UIFont systemFontOfSize:12];
         lbUser.custom_acceptEventInterval = 1.0f;
         [lbUser addTarget:self action:@selector(onForget) forControlEvents:UIControlEventTouchUpInside];
-//        lbUser.titleEdgeInsets = UIEdgeInsetsMake(0, -27, 0, 0);
+        //        lbUser.titleEdgeInsets = UIEdgeInsetsMake(0, -27, 0, 0);
         [self.tableBody addSubview:lbUser];
         _forgetBtn = lbUser;
         
@@ -511,15 +340,15 @@
         
         UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchLoginWay)];
         [smsLogin addGestureRecognizer:tap1];
-
+        
         if (XL_Hidden_MsgLoging == 1) {
             // XL修改
             smsLogin.hidden = YES;
             titleLabel.hidden = YES;
             _forgetBtn.hidden = YES;
         }
-       
-
+        
+        
         if ([g_default objectForKey:kMY_USER_NICKNAME])
             _user.userNickname = MY_USER_NAME;
         
@@ -535,7 +364,6 @@
             _user.telephone = _phone.text;
         }
         if ([g_default objectForKey:kMY_USER_PASSWORD]) {
-//            [_pwd setText:[g_default objectForKey:kMY_USER_PASSWORD]];
             
             _user.password = _pwd.text;
             
@@ -546,11 +374,11 @@
             g_server.latitude = [[dict objectForKey:@"latitude"] doubleValue];
         }
         
-
+        
         
         [g_notify addObserver:self selector:@selector(onRegistered:) name:kRegisterNotifaction object:nil];
         [g_notify addObserver:self selector:@selector(authRespNotification:) name:kWxSendAuthRespNotification object:nil];
-
+        
         if(!self.isAutoLogin || IsStringNull(_myToken)) {
             _btn.userInteractionEnabled = YES;
         }else {
@@ -559,24 +387,14 @@
             _launchImageView.image = [UIImage imageNamed:[self getLaunchImageName]];
             [self.view addSubview:_launchImageView];
         }
-//        NSString *area = [g_default objectForKey:kLocationArea];
-//        if (area.length > 0) {
         
         if(self.isAutoLogin && !IsStringNull(_myToken))
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [_wait start:Localized(@"JX_Logining")];
                 [_wait startWithClearColor];
             });
         if (!_isThirdLogin) {
             [g_server getSetting:self];
         }
-        
-//        }else {
-//            _isFirstLocation = NO;
-//            JXLocation *location = [[JXLocation alloc] init];
-//            location.delegate = self;
-//            [location getLocationWithIp];
-//        }
     }
     return self;
 }
@@ -634,7 +452,6 @@
 
 -(void)getImgCodeImg{
     if([self isMobileNumber:_phone.text]){
-        //    if ([self checkPhoneNum]) {
         //请求图片验证码
         NSString *areaCode = [self getAreaCode];
         NSString * codeUrl = [g_server getImgCode:_phone.text areaCode:areaCode];
@@ -668,11 +485,7 @@
 
 #pragma mark - 微信登录
 - (void)didWechatToLogin:(UITapGestureRecognizer *)tap {
-//    if (![[g_default objectForKey:@"agreement"] boolValue]) {
-//        [g_App showAlert:Localized(@"JX_NotAgreeProtocol")];
-//        return;
-//    }
-
+    
 }
 
 
@@ -717,7 +530,6 @@
 - (void)onSetting {
     
     JXServerListVC *vc = [[JXServerListVC alloc] init];
-//    [g_window addSubview:vc.view];
     [g_navigation pushViewController:vc animated:YES];
 }
 
@@ -752,29 +564,22 @@
 
 -(void)longLimit:(UITextField *)textField
 {
-//    if (textField.text.length > 11) { 
-//        textField.text = [textField.text substringToIndex:11];
-//    }
+    
 }
 
--(void)dealloc{
-//    _pSelf = nil;
-    //    NSLog(@"loginVC.dealloc");
+-(void)dealloc {
     [g_notify  removeObserver:self name:kRegisterNotifaction object:nil];
-    //    [_user release];
-    //    [super dealloc];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.bgImageview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, JX_SCREEN_WIDTH, JX_SCREEN_HEIGHT)];
-    [self.bgImageview setImage:[UIImage imageNamed:@"登录注册_bg_logo"]];
-//    self.bgImageview.backgroundColor = [UIColor blackColor];
+//    [self.bgImageview setImage:[UIImage imageNamed:@"登录注册_bg_logo"]];
+    self.bgImageview.backgroundColor = [UIColor whiteColor];
     self.bgImageview.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview:self.bgImageview];
     self.tableHeader.backgroundColor = [UIColor clearColor];
-    // Do any additional setup after loading the view.
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     [self.view addGestureRecognizer:tap];
 }
@@ -798,17 +603,6 @@
     if ([TextField.text isEqualToString:@""]) {
         _pwd.text = @"";
     }
-//    if (TextField == _phone) { // 限制手机号最多只能输入11位,为了适配外国电话，将不能显示手机号位数
-//        if ([g_config.regeditPhoneOrName intValue] == 1) {
-//            if (_phone.text.length > 10) {
-//                _phone.text = [_phone.text substringToIndex:10];
-//            }
-//        }else {
-//            if (_phone.text.length > 11) {
-//                _phone.text = [_phone.text substringToIndex:11];
-//            }
-//        }
-//    }
 }
 
 -(void)onClick{
@@ -817,7 +611,7 @@
     
     if([_phone.text length]<=0){
         if ([g_config.regeditPhoneOrName intValue] == 1) {
-            [g_App showAlert:Localized(@"JX_InputUserAccount")];
+            [g_App showAlert:@"请输入账号"];
         }else {
             [g_App showAlert:Localized(@"JX_InputPhone")];
         }
@@ -827,10 +621,6 @@
         [g_App showAlert:self.isSMSLogin ? Localized(@"JX_InputMessageCode") : Localized(@"JX_InputPassWord")];
         return;
     }
-//    if (![[g_default objectForKey:@"agreement"] boolValue]) {
-//        [g_App showAlert:Localized(@"JX_NotAgreeProtocol")];
-//        return;
-//    }
     [self.view endEditing:YES];
     if (self.isSMSLogin) {
         _user.verificationCode = _pwd.text;
@@ -842,7 +632,6 @@
     _user.areaCode = areaCode;
     self.isAutoLogin = NO;
     [_wait start:Localized(@"JX_Logining")];
-//    [g_server getSetting:self];
     [g_App.jxServer login:_user toView:self];
 }
 
@@ -854,11 +643,10 @@
         self.areaLabel.hidden = YES;
         _forgetBtn.hidden = NO;
         _phone.keyboardType = UIKeyboardTypeDefault;  // 仅支持大小写字母数字
-        _phone.placeholder = Localized(@"JX_InputUserAccount");
+        _phone.placeholder = @"请输入账号";
     }else {
         _areaCodeBtn.hidden = NO;
         self.areaLabel.hidden = YES;
-//        _forgetBtn.hidden = NO;
         _phone.keyboardType = UIKeyboardTypeNumberPad;  // 限制只能数字输入，使用数字键盘
         _phone.placeholder = Localized(@"JX_InputPhone");
         // 短信登录界面不显示忘记密码
@@ -878,12 +666,12 @@
         }else {
             [self performSelector:@selector(autoLogin) withObject:nil afterDelay:.5];
         }
-    else if (IsStringNull(_myToken) && !IsStringNull(_phone.text) && !IsStringNull(_pwd.text)) {
-        g_server.isManualLogin = YES;
-        [g_App.jxServer login:_user toView:self];
-    }
-    else
-        [_wait stop];
+        else if (IsStringNull(_myToken) && !IsStringNull(_phone.text) && !IsStringNull(_pwd.text)) {
+            g_server.isManualLogin = YES;
+            [g_App.jxServer login:_user toView:self];
+        }
+        else
+            [_wait stop];
     
     if (XL_Hidden_MsgLoging == 1) {
         // XL修改
@@ -897,16 +685,14 @@
         [g_config didReceive:dict];
         
         [self actionConfig];
-
+        
     }
     if( [aDownload.action isEqualToString:act_LoginConfig]){
         
         [g_config didReceive:dict];
         
         [self actionConfig];
-//        if ([g_myself.telephone isEqualToString:@"13807380000"]) {
-            [g_App showMainUI];
-//        }
+        [g_App showMainUI];
     }
     if([aDownload.action isEqualToString:act_CheckPhone]){
         [self getImgCodeImg];
@@ -922,7 +708,7 @@
         _seconds = 60;
         _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(showTime:) userInfo:_send repeats:YES];
     }
-
+    
     //登录成功
     if( [aDownload.action isEqualToString:act_UserLogin] || [aDownload.action isEqualToString:act_thirdLogin] || [aDownload.action isEqualToString:act_sdkLogin]){
         
@@ -933,14 +719,9 @@
         else {
             [g_default setBool:NO forKey:kTHIRD_LOGIN_AUTO];
         }
-//        if (!IsStringNull(_pwd.text)) {
-//            _user.password = [g_server getMD5String:_pwd.text];
-//        }
-//        [g_default setBool:[[dict objectForKey:@"multipleDevices"] boolValue] forKey:kISMultipleLogin];
-//        [g_default synchronize];
         
         [g_server doLoginOK:dict user:_user];
-                
+        
         if(self.isSwitchUser){
             //切换登录，同步好友
             [g_notify postNotificationName:kXmppClickLoginNotifaction object:nil];
@@ -956,7 +737,7 @@
             }
             
         }
-            
+        
         [self actionQuit];
         
         [g_server getDiscoverWebList:@"" toView:self];
@@ -964,31 +745,14 @@
         [_wait stop];
     }
     if([aDownload.action isEqualToString:act_userLoginAuto]){
-//        int status = [[dict objectForKey:@"serialStatus"] intValue];
-//        int token  = [[dict objectForKey:@"tokenExists"] intValue];
-//        if(status == 2){//序列号一致
-//            if(token==1){//Token也存在，说明不用登录了
         
-//        [g_default setBool:[[dict objectForKey:@"multipleDevices"] boolValue] forKey:kISMultipleLogin];
-//        [g_default synchronize];
         
-
         
-                [g_server doLoginOK:dict user:_user];
-                [g_App showMainUI];
-                [self actionQuit];
-//            }else{
-//                //Token不存在
-//                [g_App showAlert:Localized(@"JX_LoginAgain")];
-//                _launchImageView.hidden = YES;
-//            }
-//        }else{
-//            //设备号已换
-//            [g_App showAlert:Localized(@"JX_LoginAgainNow")];
-//            _launchImageView.hidden = YES;
-//        }
+        [g_server doLoginOK:dict user:_user];
+        [g_App showMainUI];
+        [self actionQuit];
         [g_server getDiscoverWebList:@"" toView:self];
-
+        
         [_wait stop];
     }
     if ([aDownload.action isEqualToString:act_GetWxOpenId]) {
@@ -1049,7 +813,7 @@
 -(int) didServerConnectError:(JXConnection*)aDownload error:(NSError *)error{//error为空时，代表超时
     _btn.userInteractionEnabled = YES;
     _launchImageView.hidden = YES;
-
+    
     if ([aDownload.action isEqualToString:act_Config]) {
         
         // 如果没请求到Config接口，在请求一次
@@ -1065,7 +829,7 @@
             return hide_error;
         }
         
-
+        
         
         NSString *url = [g_default stringForKey:kLastApiUrl];
         g_config.apiUrl = url;
@@ -1080,13 +844,13 @@
     if ([aDownload.action isEqualToString:act_thirdLogin]) {
         g_server.openId = nil;
     }
-
+    
     [_wait stop];
     return show_error;
 }
 
 -(void) didServerConnectStart:(JXConnection*)aDownload{
-//    _btn.userInteractionEnabled = NO;
+    
     if([aDownload.action isEqualToString:act_thirdLogin] || [aDownload.action isEqualToString:act_sdkLogin]){
         [_wait start];
     }
@@ -1094,14 +858,12 @@
 
 -(void)onRegister{
     inputPhoneVC* vc = [[inputPhoneVC alloc]init];
-//    [g_window addSubview:vc.view];
     [g_navigation pushViewController:vc animated:YES];
 }
 
 -(void)onForget{
     forgetPwdVC* vc = [[forgetPwdVC alloc] init];
     vc.state = 0;
-//    [g_window addSubview:vc.view];
     [g_navigation pushViewController:vc animated:YES];
 }
 
@@ -1121,7 +883,6 @@
 
 -(void)actionQuit{
     [super actionQuit];
-//    _pSelf = nil;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -1134,40 +895,39 @@
     return YES;
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
-   if (self.isSMSLogin) {
-    if (textField == _phone) {
-        [self getImgCodeImg];
+    if (self.isSMSLogin) {
+        if (textField == _phone) {
+            [self getImgCodeImg];
+        }
     }
-   }
 }
 - (void)areaCodeBtnClick:(UIButton *)but{
     [self.view endEditing:YES];
     JXTelAreaListVC *telAreaListVC = [[JXTelAreaListVC alloc] init];
     telAreaListVC.telAreaDelegate = self;
     telAreaListVC.didSelect = @selector(didSelectTelArea:);
-//    [g_window addSubview:telAreaListVC.view];
+    //    [g_window addSubview:telAreaListVC.view];
     [g_navigation pushViewController:telAreaListVC animated:YES];
 }
 - (void)didSelectTelArea:(NSDictionary *)areaCode{
-//    [_areaCodeBtn setTitle:[NSString stringWithFormat:@"+%@",areaCode] forState:UIControlStateNormal];
     
     NSString *currentLocaleLanguageCode= @"en";
     NSArray *languages = [NSLocale preferredLanguages];
-            if (languages.count>0) {
-                currentLocaleLanguageCode = languages.firstObject;
-                if ([currentLocaleLanguageCode hasPrefix:@"en"]) {
-                    currentLocaleLanguageCode = @"en";
-                }
-                else if ([currentLocaleLanguageCode hasPrefix:@"zh"]) {
-                    currentLocaleLanguageCode = @"zh";
-                }
-                else {
-                    currentLocaleLanguageCode = @"en";
-                }
-            }
-            else {
-                currentLocaleLanguageCode = @"en";
-            }
+    if (languages.count>0) {
+        currentLocaleLanguageCode = languages.firstObject;
+        if ([currentLocaleLanguageCode hasPrefix:@"en"]) {
+            currentLocaleLanguageCode = @"en";
+        }
+        else if ([currentLocaleLanguageCode hasPrefix:@"zh"]) {
+            currentLocaleLanguageCode = @"zh";
+        }
+        else {
+            currentLocaleLanguageCode = @"en";
+        }
+    }
+    else {
+        currentLocaleLanguageCode = @"en";
+    }
     if ([currentLocaleLanguageCode hasPrefix:@"zh"]) {
         self.areaLabel.text = [NSString stringWithFormat:@"%@(+%@)",areaCode[@"country"],areaCode[@"prefix"]];
     }else{
@@ -1195,10 +955,8 @@
     webpageVC * webVC = [webpageVC alloc];
     webVC.url = [self protocolUrl];
     webVC.isSend = NO;
-//    [[NSBundle mainBundle] pathForResource:@"用户协议" ofType:@"html"];
     webVC = [webVC init];
     [g_navigation.navigationView addSubview:webVC.view];
-//    [g_navigation pushViewController:webVC animated:YES];
 }
 
 -(NSString *)protocolUrl{

@@ -6787,10 +6787,10 @@
 			children = (
 				CC04E64E194709DC0075B250 /* inputPhoneVC.h */,
 				CC04E64F194709DC0075B250 /* inputPhoneVC.m */,
-				20745B1C1EADB6C90058687B /* JXTelAreaListVC.h */,
-				20745B1D1EADB6C90058687B /* JXTelAreaListVC.m */,
 				CC35371B1949B8D600177826 /* loginVC.h */,
 				CC35371C1949B8D600177826 /* loginVC.m */,
+				20745B1C1EADB6C90058687B /* JXTelAreaListVC.h */,
+				20745B1D1EADB6C90058687B /* JXTelAreaListVC.m */,
 				CC04E650194709DC0075B250 /* inputPwdVC.h */,
 				CC04E651194709DC0075B250 /* inputPwdVC.m */,
 				CCB8E752194E989700CD71CC /* forgetPwdVC.h */,
@@ -8659,7 +8659,7 @@
 						};
 					};
 					8409055517B693CF00F5C28D = {
-						DevelopmentTeam = 4NNYR87Q88;
+						DevelopmentTeam = 83D3NN4732;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -10320,7 +10320,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
-				DEVELOPMENT_TEAM = 4NNYR87Q88;
+				DEVELOPMENT_TEAM = 83D3NN4732;
 				DOUBANGO_HOME = "";
 				DOUBANGO_LIBS = "";
 				"DOUBANGO_LIBS[arch=arm64]" = $DOUBANGO_HOME/thirdparties/iphone/lib/arm64;
@@ -10389,7 +10389,7 @@
 				NGN_STACK_HOME = "";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bmakke.kuangkuang2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bmakke.kuangkuang3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -10413,7 +10413,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
-				DEVELOPMENT_TEAM = 4NNYR87Q88;
+				DEVELOPMENT_TEAM = 83D3NN4732;
 				DOUBANGO_HOME = "";
 				DOUBANGO_LIBS = "";
 				"DOUBANGO_LIBS[arch=arm64]" = $DOUBANGO_HOME/thirdparties/iphone/lib/arm64;
@@ -10475,7 +10475,7 @@
 				NGN_STACK_HOME = "";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bmakke.kuangkuang2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bmakke.kuangkuang3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
